@@ -95,7 +95,35 @@ function getData(filePath, readMapper) {
 }
 
 function createMapper(arr) {
-
+  return new Promise((resolve, reject) => {
+    // async work
+    arr.map(file => {
+      const mapper = getData(file, true);
+      mapper.then(data => {
+        data.map(d => {
+          _.forEach(d, (value, key) => {
+            //console.log("----key value -----");
+            //console.log(key + " " + value);
+            if (map[key]) {
+              //console.log("--------------after inserted new ----------------");
+              //let value1 = `${value}`;
+              //console.log(value1);
+              //map[key].value1 = true;
+              Object.assign(map[key], JSON.parse(`{"${value}" : true}`));
+              //console.log(map);
+            } else {
+              Object.assign(map, JSON.parse(`{"${key}": {"${value}" : true}}`));
+              //console.log("--------------after assigned new ----------------");
+              //console.log(map);
+            }
+          });
+          resolve("map is created");
+        });
+        //resolve("map is created");
+      });
+    });
+    // resolve("map is created");
+  });
 }
 
 function transformData(obj) {
@@ -122,8 +150,8 @@ function loadDataToDb(data) {
 }
 
 async function runETL() {
-  /*const map = await createMapper(["./map1.csv", "./map2.csv"]);
-  console.log(map);*/
+  const map = await createMapper(["./map1.csv", "./map2.csv"]);
+  console.log(map);
 
   const data = await Promise.all([
     getData("./data2_test.csv", false),
@@ -139,6 +167,6 @@ async function runETL() {
   });
 }
 
-//runETL();
+runETL();
 
-createMapper(["./map1.csv", "./map2.csv"]);
+//createMapper(["./map1.csv", "./map2.csv"]);
