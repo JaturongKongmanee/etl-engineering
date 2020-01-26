@@ -3,7 +3,6 @@ const csv = require("csv-parser");
 const mysql = require("mysql");
 const _ = require("lodash");
 
-
 let map = {};
 
 // Create the connection to MySQL Database
@@ -38,21 +37,13 @@ function getData(filePath, readMapper) {
   return new Promise((resolve, reject) => {
     // async work
     const streamer = fs.createReadStream(filePath);
-    if (readMapper) {
-      streamer
-        .pipe(csv())
-        .on("data", data => results.push(data))
-        .on("end", () => {
-          resolve(results);
-        });
-    } else {
-      streamer
-        .pipe(csv({ mapHeaders: transformData }))
-        .on("data", data => results.push(data))
-        .on("end", () => {
-          resolve(results);
-        });
-    }
+    const readMap = readMapper ? {} : { mapHeaders: transformData };
+    streamer
+      .pipe(csv(readMap))
+      .on("data", data => results.push(data))
+      .on("end", () => {
+        resolve(results);
+      });
   });
 }
 
@@ -80,7 +71,7 @@ function createMapper(arr) {
 function transformData(obj) {
   // obj = {header, index}
   const key = _.findKey(map, obj.header);
-  //console.log(map);
+  console.log(map);
 
   return (obj.header = key);
 }
@@ -104,8 +95,8 @@ async function runETL() {
   console.log(msg);
 
   const data = await Promise.all([
-    getData("./data1.csv", false),
-    getData("./data2.csv", false)
+    getData("./data1_test.csv", false),
+    getData("./data2_test.csv", false)
   ]);
 
   data.map(items => {
@@ -114,9 +105,7 @@ async function runETL() {
         console.log(message);
       });
     });
-  }); 
+  });
 }
 
 runETL();
-
-
