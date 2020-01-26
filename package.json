@@ -1,0 +1,25 @@
+{
+  "name": "etl-engineering",
+  "version": "1.0.0",
+  "description": "This hands-on exercise will create a solution to upload data from multiple sources in a single customers table using the mapping in the file provided.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaturongKongmanee/etl-engineering.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JaturongKongmanee/etl-engineering/issues"
+  },
+  "homepage": "https://github.com/JaturongKongmanee/etl-engineering#readme",
+  "dependencies": {
+    "csv-parser": "^2.3.2",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "mysql": "^2.18.1"
+  }
+}
