@@ -68,17 +68,12 @@ function createMapper(arr) {
 function transformData(obj) {
   // obj = {header, index}
   const key = _.findKey(map, obj.header);
-  //console.log(map);
-
   return (obj.header = key);
 }
 
 function loadDataToDb(data) {
-  console.log("---------------test results-------------");
-  console.log(data);
   const value = `'${data.created_at}', '${data.first_name}', '${data.last_name}', '${data.email}', '${data.latitude}', '${data.longitude}', '${data.ip}'`;
   const sql = `INSERT INTO customers (created_at, first_name, last_name, email, latitude, longitude, ip) VALUES (${value})`;
-  console.log(sql);
   queryDB(sql, "1 record inserted")
   .then(m => console.log(m));
 }
@@ -86,9 +81,7 @@ function loadDataToDb(data) {
 function queryDB(query, msg) {
   return new Promise((resolve, reject) => {
     // async work
-    //console.log("-----------------sql-------------------");
-    const sql = query;
-    con.query(sql, (err, result) => {
+    con.query(query, (err, result) => {
       if (err) throw err;
       resolve(msg);
     });
