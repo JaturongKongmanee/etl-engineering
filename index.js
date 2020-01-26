@@ -18,18 +18,15 @@ con.connect(function(err) {
   if (err) throw err;
   console.log("DB is connected...");
   // Create the DB
-  con.query("CREATE DATABASE IF NOT EXISTS etl_db", function(err, result) {
-    if (err) throw err;
-    console.log("Database is created...");
-  });
+  const queryCreateDB = "CREATE DATABASE IF NOT EXISTS etl_db";
+  queryDB(queryCreateDB, "Database is created...").then(msg =>
+    console.log(msg)
+  );
 
   // Create the table
-  const sql =
+  const queryCreateTable =
     "CREATE TABLE IF NOT EXISTS customers (created_at DATETIME(2), first_name VARCHAR(255), last_name VARCHAR(255), email VARCHAR(255), latitude DECIMAL(9,6), longtitude DECIMAL(9,6), ip VARBINARY(16))";
-  con.query(sql, function(err, result) {
-    if (err) throw err;
-    console.log("Table is created");
-  });
+  queryDB(queryCreateTable, "Table is created...").then(msg => console.log(msg));
 });
 
 function getData(filePath, readMapper) {
@@ -61,7 +58,7 @@ function createMapper(arr) {
               Object.assign(map, JSON.parse(`{"${key}": {"${value}" : true}}`));
             }
           });
-          resolve("map is created");
+          resolve("Map is created...");
         });
       });
     });
@@ -71,7 +68,7 @@ function createMapper(arr) {
 function transformData(obj) {
   // obj = {header, index}
   const key = _.findKey(map, obj.header);
-  console.log(map);
+  //console.log(map);
 
   return (obj.header = key);
 }
@@ -79,13 +76,20 @@ function transformData(obj) {
 function loadDataToDb(data) {
   //console.log("---------------test results-------------");
   const value = `'${data.created_at}', '${data.first_name}', '${data.last_name}', '${data.email}', '${data.latitude}', '${data.longtitude}', '${data.ip}'`;
+  const sql = `INSERT INTO customers (created_at, first_name, last_name, email, latitude, longtitude, ip) VALUES (${value})`;
+
+  const msg = queryDB(sql, "1 record inserted");
+  msg.then(m => console.log(m));
+}
+
+function queryDB(query, msg) {
   return new Promise((resolve, reject) => {
-    // asyn work
+    // async work
     //console.log("-----------------sql-------------------");
-    const sql = `INSERT INTO customers (created_at, first_name, last_name, email, latitude, longtitude, ip) VALUES (${value})`;
+    const sql = query;
     con.query(sql, (err, result) => {
       if (err) throw err;
-      resolve("1 record inserted");
+      resolve(msg);
     });
   });
 }
@@ -95,15 +99,13 @@ async function runETL() {
   console.log(msg);
 
   const data = await Promise.all([
-    getData("./data1_test.csv", false),
-    getData("./data2_test.csv", false)
+    getData("./data1.csv", false),
+    getData("./data2.csv", false)
   ]);
 
   data.map(items => {
     items.map(item => {
-      loadDataToDb(item).then(message => {
-        console.log(message);
-      });
+      loadDataToDb(item);
     });
   });
 }
