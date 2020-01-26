@@ -26,7 +26,9 @@ con.connect(function(err) {
   // Create the table
   const queryCreateTable =
     "CREATE TABLE IF NOT EXISTS customers (created_at DATETIME(2), first_name VARCHAR(255), last_name VARCHAR(255), email VARCHAR(255), latitude DECIMAL(9,6), longitude DECIMAL(9,6), ip VARBINARY(16))";
-  queryDB(queryCreateTable, "Table is created...").then(msg => console.log(msg));
+  queryDB(queryCreateTable, "Table is created...").then(msg =>
+    console.log(msg)
+  );
 });
 
 function getData(filePath, readMapper) {
@@ -74,8 +76,7 @@ function transformData(obj) {
 function loadDataToDb(data) {
   const value = `'${data.created_at}', '${data.first_name}', '${data.last_name}', '${data.email}', '${data.latitude}', '${data.longitude}', '${data.ip}'`;
   const sql = `INSERT INTO customers (created_at, first_name, last_name, email, latitude, longitude, ip) VALUES (${value})`;
-  queryDB(sql, "1 record inserted")
-  .then(m => console.log(m));
+  queryDB(sql, "1 record inserted").then(m => console.log(m));
 }
 
 function queryDB(query, msg) {
