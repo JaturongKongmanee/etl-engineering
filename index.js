@@ -1,9 +1,9 @@
-const mysql = require("mysql");
 const fs = require("fs");
 const csv = require("csv-parser");
+const mysql = require("mysql");
 const _ = require("lodash");
 
-let map = {
+/*let map = {
   created_at: {
     SignUpDate: true,
     createDatetime: true
@@ -32,7 +32,9 @@ let map = {
     IP: true,
     ipAddress: true
   }
-};
+};*/
+
+let map = {};
 
 // map 1
 // created_at	first_name	last_name	email	latitude	longitude	ip
@@ -50,11 +52,11 @@ const con = mysql.createConnection({
   database: "etl_db"
 });
 
-// Create the DB
+// Connect to DB
 con.connect(function(err) {
   if (err) throw err;
   console.log("DB is connected...");
-
+  // Create the DB
   con.query("CREATE DATABASE IF NOT EXISTS etl_db", function(err, result) {
     if (err) throw err;
     console.log("Database is created...");
@@ -93,76 +95,7 @@ function getData(filePath, readMapper) {
 }
 
 function createMapper(arr) {
-  arr.map(file => {
-    const mapper = getData(file, true);
-    mapper.then(data => {
-      data.map(d => {
-        console.log(d);
-        console.log("----building map-------");
-        const keys = Object.keys(d);
-        const values = Object.values(d);
-        //console.log(keys);
-        //console.log(values);
-        /*for (const [key, value] of Object.entries(d)) {
-            console.log(key, value);
-          console.log(`${key}: ${value}`);
-          let k = key: { value : true };
-          console.log("-----map.key-----");
-          console.log(map.key);
 
-          if (!map.key) {
-            Object.assign(map, { k });
-          } 
-          //map = Object.assign(`{ ${key}: { ${value} : true }}`);
-          console.log("------this map-----");
-          console.log(map);
-        }*/
-        _.forEach(d, (key, value) => {
-          console.log(key + " " + value);
-          let k = `${key}: {${value} : true}`;
-          console.log(k);
-          console.log(map);
-          Object.assign(map, `'${key}': {'${value}' : true}`);
-          console.log(map.key);
-        });
-      });
-    });
-  });
-
-  console.log(map);
-
-  /*map = {
-    created_at: {
-      SignUpDate: true,
-      createDatetime: true
-    },
-    first_name: {
-      First: true,
-      firstName: true
-    },
-    last_name: {
-      Last: true,
-      lastName: true
-    },
-    email: {
-      Email: true,
-      emailAddress: true
-    },
-    latitude: {
-      Latitude: true,
-      geoLat: true
-    },
-    longtitude: {
-      Longitude: true,
-      geoLong: true
-    },
-    ip: {
-      IP: true,
-      ipAddress: true
-    }
-  };*/
-
-  return map;
 }
 
 function transformData(obj) {
@@ -188,22 +121,24 @@ function loadDataToDb(data) {
   });
 }
 
-function runETL() {
-  //createMapper(["./map1.csv", "./map2.csv"]);
-  Promise.all([
+async function runETL() {
+  /*const map = await createMapper(["./map1.csv", "./map2.csv"]);
+  console.log(map);*/
+
+  const data = await Promise.all([
     getData("./data2_test.csv", false),
     getData("./data1_test.csv", false)
-  ]).then(data => {
-    //console.log(data);
-    data.map(items => {
-      //console.log(items);
-      items.map(item => {
-        loadDataToDb(item).then(message => {
-          console.log(message);
-        });
+  ]);
+
+  data.map(items => {
+    items.map(item => {
+      loadDataToDb(item).then(message => {
+        console.log(message);
       });
     });
   });
 }
 
-runETL();
+//runETL();
+
+createMapper(["./map1.csv", "./map2.csv"]);
