@@ -38,7 +38,7 @@ At the terminal, run **index.js**
 node index.js
 ```
 
-### Result
+## Result
 * #### After running, you should see these messages from the terminal.
 ![etl_run](https://github.com/JaturongKongmanee/etl-engineering/blob/master/images/etl_run.PNG) 
 * #### You will see Data is inserted into Database.
