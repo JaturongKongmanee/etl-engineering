@@ -40,7 +40,7 @@ node index.js
 
 ### Result
 * #### After running, you should see these messages from the terminal.
-![dashboard_page](https://github.com/JaturongKongmanee/ui-ux-design/blob/master/readme_images/dashboard.png) 
+![etl_run](https://github.com/JaturongKongmanee/etl-engineering/blob/master/images/etl_run.PNG) 
 * #### Data is inserted into Database.
-![dashboard_page](https://github.com/JaturongKongmanee/ui-ux-design/blob/master/readme_images/dashboard.png) 
+![db](https://github.com/JaturongKongmanee/etl-engineering/blob/master/images/db.PNG) 
 
