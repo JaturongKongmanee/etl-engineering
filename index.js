@@ -94,8 +94,8 @@ async function runETL() {
   console.log(msg);
 
   const data = await Promise.all([
-    getData("./data1_test.csv", false),
-    getData("./data2_test.csv", false)
+    getData("./data1.csv", false),
+    getData("./data2.csv", false)
   ]);
 
   data.map(items => {
