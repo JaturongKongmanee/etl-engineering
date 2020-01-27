@@ -33,7 +33,7 @@ const data = await Promise.all([
     getData("./data2.csv", false)
   ]);
 ```
-run **index.js**
+At the terminal, run **index.js**
 ```javascript
 node index.js
 ```
@@ -41,6 +41,6 @@ node index.js
 ### Result
 * #### After running, you should see these messages from the terminal.
 ![etl_run](https://github.com/JaturongKongmanee/etl-engineering/blob/master/images/etl_run.PNG) 
-* #### Data is inserted into Database.
+* #### You will see Data is inserted into Database.
 ![db](https://github.com/JaturongKongmanee/etl-engineering/blob/master/images/db.PNG) 
 
